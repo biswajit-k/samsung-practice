@@ -1,6 +1,7 @@
 // Online C++ compiler to run C++ program online
 #include <iostream>
 // currently incomplete...
+// hash for -ve values?? also for strings
 
 using namespace std;
 
