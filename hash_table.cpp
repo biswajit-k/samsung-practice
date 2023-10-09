@@ -1,14 +1,14 @@
 // Online C++ compiler to run C++ program online
 #include <iostream>
-// currently incomplete...
-// hash for -ve values?? also for strings
+#include <unordered_set>
+#include<string>
+// hash for strings
 
 using namespace std;
 
-
 struct HashTable {
     
-    static const int N = 1e5 + 1, base = 67, max_string_length = 100;
+    static const int N = 1e5 + 3, base = 31, max_string_length = 100;
     int htable[N], pw[max_string_length];
     
     HashTable() {
@@ -17,26 +17,55 @@ struct HashTable {
             pw[i] = (pw[i - 1] * 1LL * base) % N;
     }
   
-    int hash(int x) {
+    unsigned hash(const char* x)
+    {
         int h = 0;
-        for(int b = 0; x > 0; b++, x /= 10)
-            h = (h + (x % 10) * 1LL * pw[b]) % N;
+        for(int i = 0; x[i]; i++)
+            h = (h + (x[i] * pw[i])) % N;
         return h;
     }
-    void insert(int x) {
+
+    void insert(char* x) {
         htable[hash(x)]++;
     }
-    int get(int x) {
+
+    int get(char* x) {
         return htable[hash(x)];
     }
     
 };
 
 int main() {
-    // Write C++ code here
-    // std::cout << "Hello wo/rld!";
-
     
+    int cnt = 10000;
+    
+    HashTable table;
+    unordered_set<string> taken;
+    
+    int hits = 0;
+    
+    for(int i = 0; i < cnt; i++)
+    {
+        char str[11];
+        string copy;
+        bool unique = false;
+        while(!unique)
+        {
+            for(int j = 0; j < 10; j++)
+                str[j] = ('a' + (rand() % 26));
+            
+            copy = str;
+            unique = (taken.count(copy) == 0);
+        }
 
+        taken.insert(copy);
+        table.insert(str);
+
+        if(table.get(str) > 1)
+            hits++;
+    }
+    
+    cout << hits << '\n';            // approx 600 for 10000 - kinda okay
+    
     return 0;
 }
